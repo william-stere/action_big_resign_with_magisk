@@ -50,7 +50,10 @@ jobs:
         curl -o original.zip -L "${{ github.event.inputs.ZIP_URL }}"
         curl -o avbtool.tgz -L "https://android.googlesource.com/platform/external/avb/+archive/refs/heads/pie-release.tar.gz"
         curl -o magisk.apk -L $(curl -s https://api.github.com/repos/topjohnwu/Magisk/releases | grep -Po -m 1 '(?<=download_url\"\: \").*Magisk.*Magisk.*apk')
-        wget https://raw.githubusercontent.com/magojohnji/magiskboot-linux/main/x86_64/magiskboot
+        unzip -o magisk.apk 'lib/x86_64/*' -d _m
+        cp _m/lib/x86_64/libmagiskboot.so magiskboot
+        chmod +x magiskboot
+        ./magiskboot 2>&1 | head -3
         chmod +x magiskboot
         chmod +x main/*.sh
         mv main/sign.sh ./
